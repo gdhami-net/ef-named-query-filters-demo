@@ -110,6 +110,21 @@ public sealed class TwoNamedFiltersContext(DbContextOptions options, string curr
     }
 }
 
+/// <summary>The two named filters configured in the other order.</summary>
+public sealed class TwoNamedFiltersReversedContext(DbContextOptions options, string currentTenant)
+    : TenantContext(options, currentTenant)
+{
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        AddSoftDeleteFilters(modelBuilder, TwoNamedFiltersContext.SoftDelete);
+
+        modelBuilder.Entity<Invoice>()
+            .HasQueryFilter(TwoNamedFiltersContext.Tenant, i => i.TenantId == CurrentTenant);
+        modelBuilder.Entity<Customer>()
+            .HasQueryFilter(TwoNamedFiltersContext.Tenant, c => c.TenantId == CurrentTenant);
+    }
+}
+
 /// <summary>Two filters under one name on one entity type: the second still wins.</summary>
 public sealed class SameNameTwiceContext(DbContextOptions options, string currentTenant)
     : TenantContext(options, currentTenant)

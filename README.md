@@ -76,6 +76,7 @@ rows: A-1
 | `ReplacementTests.The_model_holds_exactly_one_filter_for_the_entity_type` | `GetDeclaredQueryFilters()` returns a single entry whose `Key` is null |
 | `ReplacementTests.One_combined_expression_keeps_both_conditions` | the EF 9 workaround still works on EF 10 |
 | `NamedFilterTests.Both_named_filters_reach_the_sql` | `WHERE "i"."TenantId" = @ef_filter__CurrentTenant AND NOT ("i"."IsDeleted")` |
+| `NamedFilterTests.The_conditions_appear_in_the_order_the_filters_were_configured` | the same two filters configured soft-delete first produce `NOT (…) AND "i"."TenantId" = …` |
 | `NamedFilterTests.Only_the_current_tenants_live_rows_come_back` | `[A-1]`, and zero rows from another tenant |
 | `NamedFilterTests.The_model_holds_both_filters_under_their_names` | two entries, keyed `Tenant` and `SoftDelete` |
 | `NamedFilterTests.Two_filters_under_one_name_still_replace_each_other` | a name scopes replacement, it does not prevent it |
@@ -84,7 +85,7 @@ rows: A-1
 | `IgnoreFilterTests.Ignoring_Tenant_by_name_keeps_the_soft_delete_condition` | `[A-1, G-1]` |
 | `IgnoreFilterTests.The_no_argument_call_still_drops_every_filter_including_the_tenant` | no WHERE at all, all four rows |
 | `IgnoreFilterTests.A_name_that_matches_nothing_is_accepted_silently` | `IgnoreQueryFilters(["SoftDeleted"])` — a typo — throws nothing, warns nothing, changes nothing |
-| `IgnoreFilterTests.Ignoring_one_name_applies_to_the_included_navigation_as_well` | the name reaches the navigation's subquery |
+| `IgnoreFilterTests.Ignoring_one_name_applies_to_the_included_navigation_as_well` | the soft-delete condition is gone from both the outer query and the navigation's subquery, and the tenant condition is still on both |
 | `MixingTests.Constructing_the_context_does_not_throw` | `OnModelCreating` has not run yet |
 | `MixingTests.Touching_the_model_throws_with_the_message_the_post_quotes` | the exact `InvalidOperationException` text, asserted with `Assert.Equal` |
 | `MixingTests.The_first_query_throws_the_same_thing` | same message from the first query instead of `context.Model` |
@@ -104,7 +105,7 @@ rows: A-1
 | `VersionTests.Report_the_build_this_suite_is_running_against` | prints and asserts `Microsoft.EntityFrameworkCore` 10.0.12 |
 | `VersionTests.The_named_overloads_exist_on_this_build` | `HasQueryFilter(string, …)` and `IgnoreQueryFilters(IReadOnlyCollection<string>)` are present |
 
-41 tests, all passing.
+42 tests, all passing.
 
 ## Run it
 

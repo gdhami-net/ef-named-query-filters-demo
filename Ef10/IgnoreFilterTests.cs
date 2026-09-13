@@ -79,7 +79,13 @@ public sealed class IgnoreFilterTests(ITestOutputHelper output) : IDisposable
             .Include(c => c.Invoices)
             .IgnoreQueryFilters([TwoNamedFiltersContext.SoftDelete]);
 
-        output.WriteLine(query.OrderBy(c => c.Id).ToQueryString());
+        var sql = query.OrderBy(c => c.Id).ToQueryString();
+        output.WriteLine(sql);
+
+        // The soft-delete condition is gone from the navigation's subquery and
+        // from the outer query; the tenant condition survives on both sides.
+        Assert.DoesNotContain("IsDeleted\")", sql);
+        Assert.Equal(2, sql.Split("\"TenantId\" = @ef_filter__CurrentTenant").Length - 1);
 
         var customer = Assert.Single(query.ToList());
         Assert.Equal(["A-1", "A-2"], customer.Invoices.OrderBy(i => i.Id).Select(i => i.Number).ToList());

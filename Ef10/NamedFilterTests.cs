@@ -27,6 +27,20 @@ public sealed class NamedFilterTests(ITestOutputHelper output) : IDisposable
     }
 
     [Fact]
+    public void The_conditions_appear_in_the_order_the_filters_were_configured()
+    {
+        using var context = _db.For<TwoNamedFiltersReversedContext>(TenantDb.Acme);
+
+        output.WriteLine(context.Invoices.OrderBy(i => i.Id).ToQueryString());
+
+        // Same two filters, configured soft-delete first this time.
+        Assert.Equal(
+            "WHERE NOT (\"i\".\"IsDeleted\") AND \"i\".\"TenantId\" = @ef_filter__CurrentTenant",
+            context.Invoices.WhereClause());
+        Assert.Equal(["A-1"], context.Invoices.Numbers());
+    }
+
+    [Fact]
     public void Only_the_current_tenants_live_rows_come_back()
     {
         using var context = _db.For<TwoNamedFiltersContext>(TenantDb.Acme);
