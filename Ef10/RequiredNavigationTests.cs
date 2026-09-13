@@ -33,6 +33,7 @@ public sealed class RequiredNavigationTests(ITestOutputHelper output) : IDisposa
         output.WriteLine(query.OrderBy(i => i.Id).ToQueryString());
 
         Assert.Contains("INNER JOIN", query.ToQueryString());
+        Assert.Contains("WHERE \"c\".\"TenantId\" = @ef_filter__CurrentTenant", query.ToQueryString());
 
         // Materialised, not projected: a Select() would drop the Include and
         // with it the join this test is about.

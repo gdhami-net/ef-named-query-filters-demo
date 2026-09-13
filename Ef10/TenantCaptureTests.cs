@@ -58,6 +58,7 @@ public sealed class TenantCaptureTests(ITestOutputHelper output) : IDisposable
         // No parameter: the tenant is a literal in the SQL, and the model was
         // cached the first time it was built.
         Assert.Contains("'acme'", firstSql);
+        Assert.Contains("WHERE \"i\".\"TenantId\" = 'acme' AND NOT (\"i\".\"IsDeleted\")", firstSql);
         Assert.DoesNotContain("@ef_filter", firstSql);
 
         // The second context asked for globex and got acme's filter and rows.
