@@ -99,7 +99,7 @@ rows: A-1
 | `WhatIsFilteredTests.ExecuteUpdate_carries_the_filters_into_the_UPDATE_statement` | one row affected, and the filters are in the UPDATE's WHERE |
 | `WhatIsFilteredTests.ExecuteDelete_carries_them_too` | one row affected |
 | `WhatIsFilteredTests.SqlQuery_is_not_an_entity_query_and_is_not_filtered` | `Database.SqlQuery<string>` returns all four rows |
-| `WhatIsFilteredTests.ExecuteSqlRaw_goes_straight_to_the_database` | `Database.ExecuteSql` updates all four rows |
+| `WhatIsFilteredTests.ExecuteSql_goes_straight_to_the_database` | `Database.ExecuteSql` updates all four rows |
 | `RequiredNavigationTests.Without_the_Include_every_invoice_comes_back` | four rows, because `Invoice` has no filter in that context |
 | `RequiredNavigationTests.With_the_Include_the_inner_join_drops_the_other_tenants_invoices` | `Include` on a required navigation makes it an INNER JOIN and two rows disappear |
 | `VersionTests.Report_the_build_this_suite_is_running_against` | prints and asserts `Microsoft.EntityFrameworkCore` 10.0.12 |

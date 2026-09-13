@@ -78,7 +78,7 @@ public sealed class WhatIsFilteredTests(ITestOutputHelper output) : IDisposable
     }
 
     [Fact]
-    public void ExecuteSqlRaw_goes_straight_to_the_database()
+    public void ExecuteSql_goes_straight_to_the_database()
     {
         using var context = _db.For<TwoNamedFiltersContext>(TenantDb.Acme);
         using var transaction = context.Database.BeginTransaction();
