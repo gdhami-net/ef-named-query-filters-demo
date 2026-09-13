@@ -90,6 +90,7 @@ rows: A-1
 | `MixingTests.Touching_the_model_throws_with_the_message_the_post_quotes` | the exact `InvalidOperationException` text, asserted with `Assert.Equal` |
 | `MixingTests.The_first_query_throws_the_same_thing` | same message from the first query instead of `context.Model` |
 | `MixingTests.The_order_of_the_two_calls_does_not_matter` | unnamed-then-named fails identically |
+| `MixingTests.The_exception_is_thrown_by_the_second_HasQueryFilter_call_itself` | with the second call wrapped in `try`, the exception is caught there and the model then builds |
 | `MixingTests.The_restriction_is_per_entity_type_not_per_model` | a named filter on `Invoice` and an unnamed one on `Customer` is fine |
 | `TenantCaptureTests.Reading_the_tenant_off_the_context_gives_a_parameter_per_instance` | one SQL string, two tenants, `[A-1]` and `[G-1]` |
 | `TenantCaptureTests.The_parameter_is_named_after_the_captured_member_not_the_filter` | filter `Tenant`, property `CurrentTenant`, parameter `@ef_filter__CurrentTenant` |
@@ -105,7 +106,7 @@ rows: A-1
 | `VersionTests.Report_the_build_this_suite_is_running_against` | prints and asserts `Microsoft.EntityFrameworkCore` 10.0.12 |
 | `VersionTests.The_named_overloads_exist_on_this_build` | `HasQueryFilter(string, …)` and `IgnoreQueryFilters(IReadOnlyCollection<string>)` are present |
 
-42 tests, all passing.
+43 tests, all passing.
 
 ## Run it
 

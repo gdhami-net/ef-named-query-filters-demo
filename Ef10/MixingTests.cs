@@ -59,6 +59,22 @@ public sealed class MixingTests(ITestOutputHelper output) : IDisposable
     }
 
     [Fact]
+    public void The_exception_is_thrown_by_the_second_HasQueryFilter_call_itself()
+    {
+        using var context = _db.For<MixedCallCaughtContext>(TenantDb.Acme);
+
+        // With the second call wrapped, building the model succeeds: nothing later in
+        // model finalization objects. The throw came from the call.
+        _ = context.Model;
+
+        var caught = MixedCallCaughtContext.CaughtAtSecondCall;
+        Assert.NotNull(caught);
+        output.WriteLine(caught.StackTrace);
+        Assert.Equal(ExpectedMessage, caught.Message);
+        Assert.Contains("HasQueryFilter", caught.StackTrace);
+    }
+
+    [Fact]
     public void The_restriction_is_per_entity_type_not_per_model()
     {
         using var context = _db.For<NamedAndUnnamedOnDifferentEntitiesContext>(TenantDb.Acme);

@@ -16,7 +16,7 @@ public abstract class TenantContext(DbContextOptions options, string currentTena
     public DbSet<Invoice> Invoices => Set<Invoice>();
     public DbSet<Customer> Customers => Set<Customer>();
 
-    /// <summary>Every log message EF produced on this context, at Trace and above.</summary>
+    /// <summary>Every message EF logged on this context through LogTo, at Trace and above.</summary>
     public List<string> Log { get; } = [];
 
     protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -155,6 +155,30 @@ public sealed class UnnamedThenNamedOnOneEntityContext(DbContextOptions options,
     {
         modelBuilder.Entity<Invoice>().HasQueryFilter(i => !i.IsDeleted);
         modelBuilder.Entity<Invoice>().HasQueryFilter("Tenant", i => i.TenantId == CurrentTenant);
+    }
+}
+
+/// <summary>
+/// The same mix as <see cref="NamedAndUnnamedOnOneEntityContext"/>, but the second
+/// call is wrapped so the test can see WHERE the exception is thrown. The model is
+/// built once per context type, so the caught exception is kept in a static field.
+/// </summary>
+public sealed class MixedCallCaughtContext(DbContextOptions options, string currentTenant)
+    : TenantContext(options, currentTenant)
+{
+    public static InvalidOperationException? CaughtAtSecondCall { get; private set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Invoice>().HasQueryFilter("Tenant", i => i.TenantId == CurrentTenant);
+        try
+        {
+            modelBuilder.Entity<Invoice>().HasQueryFilter(i => !i.IsDeleted);
+        }
+        catch (InvalidOperationException ex)
+        {
+            CaughtAtSecondCall = ex;
+        }
     }
 }
 

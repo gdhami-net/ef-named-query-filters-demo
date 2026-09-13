@@ -62,7 +62,9 @@ public sealed class ReplacementTests(ITestOutputHelper output) : IDisposable
             output.WriteLine(message);
         }
 
-        // Logging is on at Trace, which is everything EF emits.
+        // Logging is on at Trace, the most verbose level EF's logging has. Information
+        // lines (executed commands) are there; warnings, errors and any mention of
+        // the replaced filter are not.
         Assert.NotEmpty(context.Log);
         Assert.DoesNotContain(context.Log, m => m.StartsWith("warn") || m.StartsWith("fail"));
         Assert.DoesNotContain(context.Log, m => m.Contains("replac", StringComparison.OrdinalIgnoreCase));
