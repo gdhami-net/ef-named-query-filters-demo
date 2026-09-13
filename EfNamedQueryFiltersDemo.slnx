@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Ef10/Ef10.csproj" />
+  <Project Path="Ef9/Ef9.csproj" />
+</Solution>
