@@ -6,8 +6,8 @@ namespace NamedQueryFilters.Ef10;
 
 /// <summary>
 /// Point 5 of the post: a named filter and an unnamed one on the same entity
-/// type is an error, and the error arrives when the model is built rather than
-/// at the HasQueryFilter call.
+/// type is an error. The second HasQueryFilter call throws inside OnModelCreating;
+/// the exception surfaces when the model is first built.
 /// </summary>
 public sealed class MixingTests(ITestOutputHelper output) : IDisposable
 {
